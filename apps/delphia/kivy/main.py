@@ -553,6 +553,11 @@ class DelphiaFitnessTrackerApp(MDApp):
                     sm.add_widget(cls(name=name))
                 elif name in loaded and not loaded[name].name:
                     loaded[name].name = name
+        try:
+            # Attempt to load profile from backend (fallback to local file)
+            self.load_profile()
+        except Exception:
+            pass
         except Exception as e:
             print("on_start error:", e)
 
@@ -760,6 +765,45 @@ class DelphiaFitnessTrackerApp(MDApp):
             print("Profile saved locally.")
         except Exception as e:
             print("Failed to save profile locally:", e)
+
+    def load_profile(self):
+        backend = os.environ.get("DELPHIA_BACKEND_URL", "http://localhost:8000")
+        try:
+            import requests
+            resp = requests.get(f"{backend.rstrip('/')}/api/profile", timeout=5)
+            if resp.ok:
+                data = resp.json()
+                self.name = data.get("name", self.name)
+                self.dob = data.get("dob", self.dob)
+                self.gender = data.get("gender", self.gender)
+                self.weight_unit = data.get("weight_unit", self.weight_unit)
+                self.height_unit = data.get("height_unit", self.height_unit)
+                self.starting_weight = data.get("starting_weight", self.starting_weight)
+                self.total_weight = data.get("total_weight", self.total_weight)
+                self.height_value = data.get("height_value", self.height_value)
+                print("Profile loaded from backend")
+                return
+            else:
+                print("Backend profile fetch failed:", resp.status_code)
+        except Exception as e:
+            print("Failed to load profile from backend:", e)
+
+        # Fallback: load from local file
+        try:
+            if self.PROFILE_FILE.exists():
+                with self.PROFILE_FILE.open("r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    self.name = data.get("name", self.name)
+                    self.dob = data.get("dob", self.dob)
+                    self.gender = data.get("gender", self.gender)
+                    self.weight_unit = data.get("weight_unit", self.weight_unit)
+                    self.height_unit = data.get("height_unit", self.height_unit)
+                    self.starting_weight = data.get("starting_weight", self.starting_weight)
+                    self.total_weight = data.get("total_weight", self.total_weight)
+                    self.height_value = data.get("height_value", self.height_value)
+                    print("Profile loaded from local file")
+        except Exception as e:
+            print("Failed to load profile locally:", e)
 
 # ----------------------------
 # Run the app
