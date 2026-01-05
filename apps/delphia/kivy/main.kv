@@ -1,0 +1,598 @@
+#:import dp kivy.metrics.dp
+#:import ConfettiContainer celebration.ConfettiContainer
+#:import FitImage kivymd.uix.fitimage.FitImage
+
+
+<MDDropdownMenu>:
+    md_bg_color: 0, 0, 0, 1
+
+ScreenManager:
+    HomeScreen:
+        name: "home"
+    ProteinScreen:
+        name: "protein"
+    WaterScreen:
+        name: "water"
+    CaloriesScreen:
+        name: "calories"
+    MealsScreen:
+        name: "meals"
+    ProfileScreen:
+        name: "profile"
+    GoalsScreen:
+        name: "goals"
+    CommunityScreen:
+        name: "community"
+    SupplementsScreen:
+        name: "supplements"
+    WorkoutsScreen:
+        name: "workouts"
+    SportsScreen:
+        name: "sports"
+    FreeTrainingScreen:
+        name: "freetraining"
+    
+    
+<ImageButton@ButtonBehavior+Image>:
+
+<MenuLabel@ButtonBehavior+MDLabel>:
+
+<HomeScreen>:
+    name: "home"
+    FloatLayout:
+
+        ImageButton:
+            id: menu_btn
+            source: "menu.png"
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: None, None
+            size: dp(96), dp(96)
+            pos_hint: {"x": 0, "top": 1}
+            on_release: app.return_to_menu_dropdown()
+
+        FitImage:
+            source: "homescreen.png"
+            keep_ratio: True
+            allow_stretch: True
+            size_hint: None, None
+            height: self.parent.height
+            width: self.texture_size[0] * (self.height / self.texture_size[1]) if self.texture_size else 0
+            pos_hint: {"center_x": 0.5, "y": 0}
+
+
+<ProteinScreen>:
+    name: "protein"
+    FloatLayout:
+        Image:
+            source: "protein.png"
+            size_hint: None, None
+            size: dp(800), dp(800)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current protein (g)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.protein_color
+
+            MDTextField:
+                id: prot_input
+                hint_text: "e.g. 50"
+                text: str(app.protein_intake) if app.protein_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.protein_color
+                text_color: app.protein_color
+                hint_text_color: app.protein_color
+                cursor_color: app.protein_color
+                canvas.before:
+                    Color:
+                        rgba: app.protein_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text: app.protein_intake = float(self.text) if self.text else 0; (app.protein_intake >= app.starting_weight * 0.8 and root.ids.prot_confetti.start())
+
+        MDLabel:
+            text: f"Target: {app.starting_weight * 0.8:.0f}–{app.starting_weight * 1.2:.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.protein_color
+
+        MDLabel:
+            text: f"Current: {app.protein_intake:.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.protein_color
+
+        MDLabel:
+            text: f"Remaining: {max(app.starting_weight * 0.8 - app.protein_intake, 0):.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.protein_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.protein_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: prot_confetti
+
+<WaterScreen>:
+    name: "water"
+    FloatLayout:
+        Image:
+            source: "water.png"
+            size_hint: None, None
+            size: dp(400), dp(400)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current water (ml)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.water_color
+
+            MDTextField:
+                id: water_input
+                hint_text: "e.g. 500"
+                text: str(app.water_intake) if app.water_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.water_color
+                text_color: app.water_color
+                hint_text_color: app.water_color
+                cursor_color: app.water_color
+                canvas.before:
+                    Color:
+                        rgba: app.water_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text: app.water_intake = float(self.text) if self.text else 0; (app.water_intake >= app.water_goal and root.ids.water_confetti.start())
+
+        MDLabel:
+            text: f"Target: {app.water_goal:.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.water_color
+
+        MDLabel:
+            text: f"Current: {app.water_intake:.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.water_color
+
+        MDLabel:
+            text: f"Remaining: {max(app.water_goal - app.water_intake, 0):.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.water_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.water_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: water_confetti
+
+#:import dp kivy.metrics.dp
+
+<CaloriesScreen>:
+    name: "calories"
+    FloatLayout:
+        Image:
+            source: "cals.png"
+            size_hint: None, None
+            size: dp(400), dp(400)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.32}
+
+            MDLabel:
+                text: "Gender"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                text_size: self.size
+
+            MenuLabel:
+                text: "[X] Male" if app.gender == "male" else "[ ] Male"
+                markup: True
+                size_hint: None, None
+                size: dp(100), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                on_release: app.gender = "male"
+
+            MenuLabel:
+                text: "[X] Female" if app.gender == "female" else "[ ] Female"
+                markup: True
+                size_hint: None, None
+                size: dp(100), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                on_release: app.gender = "female"
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current calories (kcal)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+
+            MDTextField:
+                id: cal_input
+                hint_text: "e.g. 2000"
+                text: str(int(app.calorie_intake)) if app.calorie_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.calories_color
+                text_color: app.calories_color
+                hint_text_color: app.calories_color
+                cursor_color: app.calories_color
+                canvas.before:
+                    Color:
+                        rgba: app.calories_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text:
+                    app.calorie_intake = int(self.text) if self.text.isdigit() else 0
+                    (app.calorie_intake >= app.calorie_goal and root.ids.cal_confetti.start())
+
+        MDLabel:
+            text: ("Target: {:.0f} kcal".format(app.calorie_target_male) if app.gender == "male" else "Target: {:.0f} kcal".format(app.calorie_target_female)) if (app.calorie_target_male or app.calorie_target_female) else "Target: —"
+            size_hint: None, None
+            size: dp(320), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.calories_color
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(24)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(28)
+            pos_hint: {"x": 0.05, "y": 0.15}
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+                size_hint_x: None
+                width: dp(260)
+
+                MDLabel:
+                    text: "Male reference"
+                    size_hint: None, None
+                    size: dp(160), dp(24)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+                MDLabel:
+                    text: "{:.0f} kcal".format(app.calorie_target_male) if app.calorie_target_male else "—"
+                    size_hint: None, None
+                    size: dp(100), dp(24)
+                    halign: "right"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+                size_hint_x: None
+                width: dp(260)
+
+                MDLabel:
+                    text: "Female reference"
+                    size_hint: None, None
+                    size: dp(160), dp(24)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+                MDLabel:
+                    text: "{:.0f} kcal".format(app.calorie_target_female) if app.calorie_target_female else "—"
+                    size_hint: None, None
+                    size: dp(100), dp(24)
+                    halign: "right"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+
+        MDLabel:
+            text: f"Current: {int(app.calorie_intake) if app.calorie_intake else 0} kcal"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.calories_color
+
+        MDLabel:
+            text: f"Remaining: {max(int(app.calorie_goal) - int(app.calorie_intake), 0)} kcal"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.calories_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.calories_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: cal_confetti
+
+<ProfileScreen>:
+    name: "profile"
+    FloatLayout:
+
+        # LEFT COLUMN: Profile form (atomic, parser-safe)
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(12)
+            padding: dp(20), dp(12), dp(12), dp(12)
+            size_hint: 0.66, None
+            height: dp(48) * 12
+            pos_hint: {"x": 0.03, "y": 0.25}
+
+            # Row 1: Name
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Name"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: name_input
+                    text: app.name if hasattr(app, "name") else ""
+                    on_text: setattr(app, "name", self.text)
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 2: Date of Birth
+            BoxLayout:
+                spacing: dp(8)
+
+<FreeTrainingScreen>:
+    name: "freetraining"
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+
+        # Input fields
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(20)
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: workout_name
+                hint_text: "Workout Name"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+            MDTextField:
+                id: skill_focus
+                hint_text: "Skill Focus"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+            MDTextField:
+                id: notes
+                hint_text: "Notes"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+        # Timer
+        MDLabel:
+            id: timer_label
+            text: "00:00:00"
+            font_style: "Headline"
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 1, 0.84, 0, 1
+
+        # Start/Stop buttons
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(20)
+            pos_hint: {"center_x": 0.5}
+
+            MenuLabel:
+                id: start_timer
+                text: "[u]Start Timer[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.start_timer()
+
+            MenuLabel:
+                id: stop_timer
+                text: "[u]Stop Timer[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.stop_timer()
+
+        # Save Session bottom-left
+        AnchorLayout:
+            anchor_x: "left"
+            anchor_y: "bottom"
+            size_hint: None, None
+            size: dp(160), dp(48)
+
+            MenuLabel:
+                id: save_session
+                text: "[u]Save Session[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.save_session()
+
+        # --- Footer: Return to Menu ---
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "bottom"
+            size_hint: None, None
+            size: dp(160), dp(48)
+            pos_hint: {"right": 1, "y": 0}
+
+            MDLabel:
+                text: "[u]Return to Menu[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                halign: "right"
+                valign: "middle"
+                on_touch_down:
+                    if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+It's long; the replace succeeded? The replace tool will return a success response; we need to get that. The replace_string_in_file call should have returned, but we didn't capture response. The tool will have output; check the replace response. It's not shown in the assistant message; but the tool returned a result. Now we should run a lint or run tests? The requested user from conversation summary said next steps: move main.py into apps/delphia/kivy/, update Builder.load_file to relative path, fix FreeTrainingScreen name mismatch (name 
