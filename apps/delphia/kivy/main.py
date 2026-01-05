@@ -727,24 +727,39 @@ class DelphiaFitnessTrackerApp(MDApp):
             pass
 
     def save_profile(self):
+        data = {
+            "name": self.name,
+            "dob": self.dob,
+            "gender": self.gender,
+            "weight_unit": self.weight_unit,
+            "height_unit": self.height_unit,
+            "starting_weight": self.starting_weight,
+            "total_weight": self.total_weight,
+            "height_value": self.height_value,
+            "avatar_path": getattr(self, "avatar_path", ""),
+            "initials": getattr(self, "initials", ""),
+        }
+
+        # Attempt to persist to backend first
+        backend = os.environ.get("DELPHIA_BACKEND_URL", "http://localhost:8000")
         try:
-            data = {
-                "name": self.name,
-                "dob": self.dob,
-                "gender": self.gender,
-                "weight_unit": self.weight_unit,
-                "height_unit": self.height_unit,
-                "starting_weight": self.starting_weight,
-                "total_weight": self.total_weight,
-                "height_value": self.height_value,
-                "avatar_path": getattr(self, "avatar_path", ""),
-                "initials": getattr(self, "initials", ""),
-            }
+            import requests
+            resp = requests.post(f"{backend.rstrip('/')}/api/profile", json=data, timeout=5)
+            if resp.ok:
+                print("Profile saved to backend.")
+                return
+            else:
+                print("Backend save failed:", resp.status_code, resp.text)
+        except Exception as e:
+            print("Failed to save to backend (falling back to local file):", e)
+
+        # Fallback: save locally to file
+        try:
             with self.PROFILE_FILE.open("w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2)
-            print("Profile saved.")
+            print("Profile saved locally.")
         except Exception as e:
-            print("Failed to save profile:", e)
+            print("Failed to save profile locally:", e)
 
 # ----------------------------
 # Run the app
