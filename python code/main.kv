@@ -1,0 +1,3789 @@
+#:import dp kivy.metrics.dp
+#:import ConfettiContainer celebration.ConfettiContainer
+#:import FitImage kivymd.uix.fitimage.FitImage
+
+
+<MDDropdownMenu>:
+    md_bg_color: 0, 0, 0, 1
+
+ScreenManager:
+    HomeScreen:
+        name: "home"
+    ProteinScreen:
+        name: "protein"
+    WaterScreen:
+        name: "water"
+    CaloriesScreen:
+        name: "calories"
+    MealsScreen:
+        name: "meals"
+    ProfileScreen:
+        name: "profile"
+    GoalsScreen:
+        name: "goals"
+    CommunityScreen:
+        name: "community"
+    SupplementsScreen:
+        name: "supplements"
+    WorkoutsScreen:
+        name: "workouts"
+    SportsScreen:
+        name: "sports"
+    FreeTrainingScreen:
+        name: "freetraining"
+    
+    
+<ImageButton@ButtonBehavior+Image>:
+
+<MenuLabel@ButtonBehavior+MDLabel>:
+
+<HomeScreen>:
+    name: "home"
+    FloatLayout:
+
+        ImageButton:
+            id: menu_btn
+            source: "menu.png"
+            allow_stretch: True
+            keep_ratio: True
+            size_hint: None, None
+            size: dp(96), dp(96)
+            pos_hint: {"x": 0, "top": 1}
+            on_release: app.return_to_menu_dropdown()
+
+        FitImage:
+            source: "homescreen.png"
+            keep_ratio: True
+            allow_stretch: True
+            size_hint: None, None
+            height: self.parent.height
+            width: self.texture_size[0] * (self.height / self.texture_size[1]) if self.texture_size else 0
+            pos_hint: {"center_x": 0.5, "y": 0}
+
+
+<ProteinScreen>:
+    name: "protein"
+    FloatLayout:
+        Image:
+            source: "protein.png"
+            size_hint: None, None
+            size: dp(800), dp(800)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current protein (g)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.protein_color
+
+            MDTextField:
+                id: prot_input
+                hint_text: "e.g. 50"
+                text: str(app.protein_intake) if app.protein_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.protein_color
+                text_color: app.protein_color
+                hint_text_color: app.protein_color
+                cursor_color: app.protein_color
+                canvas.before:
+                    Color:
+                        rgba: app.protein_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text: app.protein_intake = float(self.text) if self.text else 0; (app.protein_intake >= app.starting_weight * 0.8 and root.ids.prot_confetti.start())
+
+        MDLabel:
+            text: f"Target: {app.starting_weight * 0.8:.0f}–{app.starting_weight * 1.2:.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.protein_color
+
+        MDLabel:
+            text: f"Current: {app.protein_intake:.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.protein_color
+
+        MDLabel:
+            text: f"Remaining: {max(app.starting_weight * 0.8 - app.protein_intake, 0):.0f} g"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.protein_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.protein_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: prot_confetti
+
+<WaterScreen>:
+    name: "water"
+    FloatLayout:
+        Image:
+            source: "water.png"
+            size_hint: None, None
+            size: dp(400), dp(400)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current water (ml)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.water_color
+
+            MDTextField:
+                id: water_input
+                hint_text: "e.g. 500"
+                text: str(app.water_intake) if app.water_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.water_color
+                text_color: app.water_color
+                hint_text_color: app.water_color
+                cursor_color: app.water_color
+                canvas.before:
+                    Color:
+                        rgba: app.water_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text: app.water_intake = float(self.text) if self.text else 0; (app.water_intake >= app.water_goal and root.ids.water_confetti.start())
+
+        MDLabel:
+            text: f"Target: {app.water_goal:.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.water_color
+
+        MDLabel:
+            text: f"Current: {app.water_intake:.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.water_color
+
+        MDLabel:
+            text: f"Remaining: {max(app.water_goal - app.water_intake, 0):.0f} ml"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.water_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.water_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: water_confetti
+
+#:import dp kivy.metrics.dp
+
+<CaloriesScreen>:
+    name: "calories"
+    FloatLayout:
+        Image:
+            source: "cals.png"
+            size_hint: None, None
+            size: dp(400), dp(400)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            allow_stretch: False
+            keep_ratio: True
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.32}
+
+            MDLabel:
+                text: "Gender"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                text_size: self.size
+
+            MenuLabel:
+                text: "[X] Male" if app.gender == "male" else "[ ] Male"
+                markup: True
+                size_hint: None, None
+                size: dp(100), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                on_release: app.gender = "male"
+
+            MenuLabel:
+                text: "[X] Female" if app.gender == "female" else "[ ] Female"
+                markup: True
+                size_hint: None, None
+                size: dp(100), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+                on_release: app.gender = "female"
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(8)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(48)
+            pos_hint: {"x": 0.05, "y": 0.25}
+
+            MDLabel:
+                text: "Current calories (kcal)"
+                size_hint: None, None
+                size: dp(180), dp(48)
+                halign: "left"
+                valign: "middle"
+                color: app.calories_color
+
+            MDTextField:
+                id: cal_input
+                hint_text: "e.g. 2000"
+                text: str(int(app.calorie_intake)) if app.calorie_intake else ""
+                multiline: False
+                input_filter: "int"
+                size_hint: None, None
+                size: dp(150), dp(48)
+                background_color: 0, 0, 0, 0
+                foreground_color: app.calories_color
+                text_color: app.calories_color
+                hint_text_color: app.calories_color
+                cursor_color: app.calories_color
+                canvas.before:
+                    Color:
+                        rgba: app.calories_color
+                    Line:
+                        width: dp(1.5)
+                        rectangle: (self.x, self.y, self.width, self.height)
+                on_text:
+                    app.calorie_intake = int(self.text) if self.text.isdigit() else 0
+                    (app.calorie_intake >= app.calorie_goal and root.ids.cal_confetti.start())
+
+        MDLabel:
+            text: ("Target: {:.0f} kcal".format(app.calorie_target_male) if app.gender == "male" else "Target: {:.0f} kcal".format(app.calorie_target_female)) if (app.calorie_target_male or app.calorie_target_female) else "Target: —"
+            size_hint: None, None
+            size: dp(320), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.18}
+            halign: "left"
+            color: app.calories_color
+
+        BoxLayout:
+            orientation: "horizontal"
+            spacing: dp(24)
+            size_hint: None, None
+            width: root.width * 0.9
+            height: dp(28)
+            pos_hint: {"x": 0.05, "y": 0.15}
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+                size_hint_x: None
+                width: dp(260)
+
+                MDLabel:
+                    text: "Male reference"
+                    size_hint: None, None
+                    size: dp(160), dp(24)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+                MDLabel:
+                    text: "{:.0f} kcal".format(app.calorie_target_male) if app.calorie_target_male else "—"
+                    size_hint: None, None
+                    size: dp(100), dp(24)
+                    halign: "right"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(8)
+                size_hint_x: None
+                width: dp(260)
+
+                MDLabel:
+                    text: "Female reference"
+                    size_hint: None, None
+                    size: dp(160), dp(24)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+                MDLabel:
+                    text: "{:.0f} kcal".format(app.calorie_target_female) if app.calorie_target_female else "—"
+                    size_hint: None, None
+                    size: dp(100), dp(24)
+                    halign: "right"
+                    valign: "middle"
+                    color: app.calories_color
+                    text_size: self.size
+
+        MDLabel:
+            text: f"Current: {int(app.calorie_intake) if app.calorie_intake else 0} kcal"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.12}
+            halign: "left"
+            color: app.calories_color
+
+        MDLabel:
+            text: f"Remaining: {max(int(app.calorie_goal) - int(app.calorie_intake), 0)} kcal"
+            size_hint: None, None
+            size: dp(280), dp(24)
+            pos_hint: {"x": 0.05, "y": 0.06}
+            halign: "left"
+            color: app.calories_color
+
+        MenuLabel:
+            text: "Return to Menu"
+            size_hint: None, None
+            size: dp(140), dp(48)
+            pos_hint: {"right": 0.98, "y": 0.02}
+            halign: "center"
+            valign: "middle"
+            color: app.calories_color
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+        ConfettiContainer:
+            id: cal_confetti
+
+<ProfileScreen>:
+    name: "profile"
+    FloatLayout:
+
+        # LEFT COLUMN: Profile form (atomic, parser-safe)
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(12)
+            padding: dp(20), dp(12), dp(12), dp(12)
+            size_hint: 0.66, None
+            height: dp(48) * 12
+            pos_hint: {"x": 0.03, "y": 0.25}
+
+            # Row 1: Name
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Name"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: name_input
+                    text: app.name if hasattr(app, "name") else ""
+                    on_text: setattr(app, "name", self.text)
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 2: Date of Birth
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Date of Birth"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: dob_input
+                    text: app.dob if hasattr(app, "dob") else ""
+                    on_text: setattr(app, "dob", self.text)
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 3: Weight Unit (visual toggles)
+            BoxLayout:
+                spacing: dp(12)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Weight Unit"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MenuLabel:
+                    text: "kg"
+                    size_hint: None, None
+                    size: dp(60), dp(36)
+                    halign: "center"
+                    valign: "middle"
+                    color: (0, 0, 0, 1) if (hasattr(app, "weight_unit") and app.weight_unit == "kg") else app.profile_color
+                    on_release:
+                        setattr(app, "weight_unit", "kg")
+                        app._update_total_change_text() if hasattr(app, "_update_total_change_text") else None
+                        app._update_total_weight_color() if hasattr(app, "_update_total_weight_color") else None
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color if (hasattr(app, "weight_unit") and app.weight_unit == "kg") else (0, 0, 0, 0)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Line:
+                            width: dp(1.2)
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MenuLabel:
+                    text: "lbs"
+                    size_hint: None, None
+                    size: dp(60), dp(36)
+                    halign: "center"
+                    valign: "middle"
+                    color: (0, 0, 0, 1) if (hasattr(app, "weight_unit") and app.weight_unit == "lb") else app.profile_color
+                    on_release:
+                        setattr(app, "weight_unit", "lb")
+                        app._update_total_change_text() if hasattr(app, "_update_total_change_text") else None
+                        app._update_total_weight_color() if hasattr(app, "_update_total_weight_color") else None
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color if (hasattr(app, "weight_unit") and app.weight_unit == "lb") else (0, 0, 0, 0)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Line:
+                            width: dp(1.2)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 4: Starting Weight
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Starting Weight"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: startwt_input
+                    text: app.starting_weight_input
+
+                    on_text:
+                        app._on_starting_weight_text(self.text) if hasattr(app, "_on_starting_weight_text") else None
+                        app._update_total_weight_color() if hasattr(app, "_update_total_weight_color") else None
+                        app._update_total_change_text() if hasattr(app, "_update_total_change_text") else None
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    input_filter: "float"
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 5: Current Weight
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Current Weight"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: totalwt_input
+                    text: app.total_weight_input
+
+                    on_text:
+                        app._on_total_weight_text(self.text) if hasattr(app, "_on_total_weight_text") else None
+                        app._update_total_weight_color() if hasattr(app, "_update_total_weight_color") else None
+                        app._update_total_change_text() if hasattr(app, "_update_total_change_text") else None
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    input_filter: "float"
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 6: Target Weight
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Target Weight"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: targetwt_input
+                    text: (str(app.target_weight) if hasattr(app, "target_weight") and app.target_weight is not None else "")
+                    on_text: app._on_target_weight_text(self.text) if hasattr(app, "_on_target_weight_text") else None
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    input_filter: "float"
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 7: Total changed (read-only, dynamic color)
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+
+                MDLabel:
+                    text: "Total changed (" + app.weight_unit + ")"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+
+                MDTextField:
+                    text: app.total_change_text
+                    readonly: True
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    foreground_color: app.total_weight_color
+                    text_color: app.total_weight_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.total_weight_color
+                    canvas.before:
+                        Color:
+                            rgba: app.total_weight_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+
+
+            # Row 8: Height Unit (visual toggles)
+            BoxLayout:
+                spacing: dp(12)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Height Unit"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MenuLabel:
+                    text: "cm"
+                    size_hint: None, None
+                    size: dp(60), dp(36)
+                    halign: "center"
+                    valign: "middle"
+                    color: (0, 0, 0, 1) if (hasattr(app, "height_unit") and app.height_unit == "cm") else app.profile_color
+                    on_release:
+                        setattr(app, "height_unit", "cm")
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color if (hasattr(app, "height_unit") and app.height_unit == "cm") else (0, 0, 0, 0)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Line:
+                            width: dp(1.2)
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MenuLabel:
+                    text: "in"
+                    size_hint: None, None
+                    size: dp(60), dp(36)
+                    halign: "center"
+                    valign: "middle"
+                    color: (0, 0, 0, 1) if (hasattr(app, "height_unit") and app.height_unit == "in") else app.profile_color
+                    on_release:
+                        setattr(app, "height_unit", "in")
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color if (hasattr(app, "height_unit") and app.height_unit == "in") else (0, 0, 0, 0)
+                        Rectangle:
+                            pos: self.pos
+                            size: self.size
+                        Line:
+                            width: dp(1.2)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 9: Height
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Height"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDTextField:
+                    id: height_input
+                    text: (str(app.height_value) if hasattr(app, "height_value") and app.height_value is not None else "")
+                    on_text:
+                        app._on_height_text(self.text) if hasattr(app, "_on_height_text") else None
+                        app._update_bmi() if hasattr(app, "_update_bmi") else None
+                    size_hint_x: None
+                    width: dp(300)
+                    background_color: 0, 0, 0, 0
+                    input_filter: "float"
+                    foreground_color: app.profile_color
+                    text_color: app.profile_color
+                    hint_text_color: app.profile_color
+                    cursor_color: app.profile_color
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.5)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # Row 10: BMI (no box)
+            BoxLayout:
+                spacing: dp(8)
+                size_hint_y: None
+                height: dp(48)
+                MDLabel:
+                    text: "Body mass index →"
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDLabel:
+                    text: (str(app.bmi_text) if hasattr(app, "bmi_text") else "—")
+                    size_hint_x: None
+                    width: dp(80)
+                    halign: "center"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+                MDLabel:
+                    text: (str(app.bmi_category) if hasattr(app, "bmi_category") else "")
+                    size_hint_x: None
+                    width: dp(160)
+                    halign: "left"
+                    valign: "middle"
+                    color: app.profile_color
+                    text_size: self.size
+
+        # RIGHT COLUMN: Anchored top-right stack (avatar, actions, conversions)
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "top"
+            padding: dp(20)
+            size_hint: 1, 1
+            BoxLayout:
+                orientation: "vertical"
+                spacing: dp(12)
+                size_hint: None, None
+                width: dp(260)
+                height: self.minimum_height
+
+                # Avatar card (locked, no drift)
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: dp(10)
+                    padding: dp(10)
+                    size_hint_y: None
+                    height: dp(100)
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.0)
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    BoxLayout:
+                        size_hint: None, None
+                        size: dp(80), dp(80)
+                        canvas.before:
+                            Color:
+                                rgba: app.profile_color
+                            Line:
+                                width: dp(1.0)
+                                rectangle: (self.x, self.y, self.width, self.height)
+                        Image:
+                            source: (app.avatar_path if hasattr(app, "avatar_path") and app.avatar_path else "")
+                            allow_stretch: False
+                            keep_ratio: True
+                            size_hint: None, None
+                            size: dp(78), dp(78)
+                            opacity: 1 if (hasattr(app, "avatar_path") and app.avatar_path) else 0
+                        MDLabel:
+                            text: (app.initials if hasattr(app, "initials") and app.initials and not (hasattr(app, "avatar_path") and app.avatar_path) else "Your")
+                            color: app.profile_color
+                            halign: "center"
+                            valign: "middle"
+                            text_size: self.size
+                            size_hint: None, None
+                            size: dp(78), dp(78)
+                            opacity: 1 if not (hasattr(app, "avatar_path") and app.avatar_path) else 0
+                    BoxLayout:
+                        orientation: "vertical"
+                        spacing: dp(4)
+                        MDLabel:
+                            text: (app.name if hasattr(app, "name") and app.name else "Your Name")
+                            color: app.profile_color
+                            size_hint_y: None
+                            height: dp(28)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            shorten: True
+                            shorten_from: "right"
+                        MDLabel:
+                            text: (app.dob if hasattr(app, "dob") and app.dob else "")
+                            color: app.profile_color
+                            size_hint_y: None
+                            height: dp(24)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                        MDLabel:
+                            text: "Profile"
+                            color: app.profile_color
+                            size_hint_y: None
+                            height: dp(24)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+
+                # Actions row
+                BoxLayout:
+                    orientation: "horizontal"
+                    spacing: dp(10)
+                    size_hint_y: None
+                    height: dp(44)
+                    MenuLabel:
+                        text: "Upload"
+                        size_hint: None, None
+                        size: dp(70), dp(44)
+                        halign: "center"
+                        valign: "middle"
+                        color: app.profile_color
+                        on_release: app.open_file_chooser() if hasattr(app, "open_file_chooser") else None
+                    MenuLabel:
+                        text: "Camera"
+                        size_hint: None, None
+                        size: dp(70), dp(44)
+                        halign: "center"
+                        valign: "middle"
+                        color: app.profile_color
+                        on_release: app.set_avatar_from_camera() if hasattr(app, "set_avatar_from_camera") else None
+                    MenuLabel:
+                        text: "Clear"
+                        size_hint: None, None
+                        size: dp(60), dp(44)
+                        halign: "center"
+                        valign: "middle"
+                        color: app.profile_color
+                        on_release: app.clear_avatar() if hasattr(app, "clear_avatar") else None
+
+                # Conversion formulas box
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(4)
+                    padding: dp(8)
+                    size_hint_y: None
+                    height: dp(140)
+                    canvas.before:
+                        Color:
+                            rgba: app.profile_color
+                        Line:
+                            width: dp(1.0)
+                            rectangle: (self.x, self.y, self.width, self.height)
+                    MDLabel:
+                        text: "Conversion Formulas"
+                        size_hint_y: None
+                        height: dp(22)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.profile_color
+                        text_size: self.size
+                    MDLabel:
+                        text: "kg → lb: kg × 2.20462"
+                        size_hint_y: None
+                        height: dp(24)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.profile_color
+                        text_size: self.size
+                    MDLabel:
+                        text: "lb → kg: lb ÷ 2.20462"
+                        size_hint_y: None
+                        height: dp(24)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.profile_color
+                        text_size: self.size
+                    MDLabel:
+                        text: "cm → in: cm ÷ 2.54"
+                        size_hint_y: None
+                        height: dp(24)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.profile_color
+                        text_size: self.size
+                    MDLabel:
+                        text: "in → cm: in × 2.54"
+                        size_hint_y: None
+                        height: dp(24)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.profile_color
+                        text_size: self.size
+
+        # BOTTOM-LEFT: Save Profile (locked)
+        AnchorLayout:
+            anchor_x: "left"
+            anchor_y: "bottom"
+            padding: dp(20)
+            MenuLabel:
+                text: "Save Profile"
+                size_hint: None, None
+                size: dp(140), dp(48)
+                halign: "center"
+                valign: "middle"
+                color: app.profile_color
+                on_release: app.save_profile() if hasattr(app, "save_profile") else None
+
+        # BOTTOM-RIGHT: Return to Menu (locked)
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "bottom"
+            padding: dp(20)
+            MenuLabel:
+                text: "Return to Menu"
+                size_hint: None, None
+                size: dp(160), dp(48)
+                halign: "center"
+                valign: "middle"
+                color: app.profile_color
+                on_touch_down:
+                    if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+
+
+<CustomMenuItem@MDListItem>:
+    theme_text_color: "Custom"
+    text_color: 1, 1, 1, 1
+    md_bg_color: 0.1, 0.1, 0.1, 1
+
+
+<GoalsScreen>:
+    name: "goals"
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(28)
+            padding: dp(16), 0
+            MDLabel:
+                text: "Streak: " + (str(int(app.goal_streak_days)) if hasattr(app, "goal_streak_days") else "0") + " days"
+                size_hint: None, None
+                size: dp(220), dp(28)
+                halign: "left"
+                valign: "middle"
+                color: app.primary_color
+                text_size: self.size
+
+        ScrollView:
+            do_scroll_x: False
+            do_scroll_y: True
+
+            MDBoxLayout:
+                orientation: "vertical"
+                spacing: dp(12)
+                padding: dp(16)
+                size_hint_y: None
+                height: self.minimum_height
+
+                # Target weight
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Target weight (lbs)"
+                        size_hint_x: None
+                        width: dp(200)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: target_weight_field
+                        text: str(app.target_weight) if hasattr(app, "target_weight") else ""
+                        input_filter: "int"
+                        size_hint_x: None
+                        width: dp(120)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Weekly change
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Weekly change (lbs)"
+                        size_hint_x: None
+                        width: dp(200)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: weekly_change_field
+                        text: str(app.weekly_change) if hasattr(app, "weekly_change") else ""
+                        input_filter: "float"
+                        size_hint_x: None
+                        width: dp(120)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Custom goal
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Custom goal"
+                        size_hint_x: None
+                        width: dp(160)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: custom_goal_field
+                        text: app.custom_goal if hasattr(app, "custom_goal") else ""
+                        size_hint_x: None
+                        width: dp(240)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Mood goal (dropdown)
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Mood goal"
+                        size_hint_x: None
+                        width: dp(160)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: mood_goal_field
+                        text: app.mood_goal if hasattr(app, "mood_goal") else ""
+                        readonly: True
+                        size_hint_x: None
+                        width: dp(200)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+                    MDIconButton:
+                        icon: "menu-down"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_color
+                        on_release: root.open_mood_goal_menu(mood_goal_field)
+
+                # Habits (dropdown)
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Habits"
+                        size_hint_x: None
+                        width: dp(160)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: habits_field
+                        text: app.habits if hasattr(app, "habits") else ""
+                        readonly: True
+                        size_hint_x: None
+                        width: dp(240)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+                    MDIconButton:
+                        icon: "menu-down"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_color
+                        on_release: root.open_habits_menu(habits_field)
+
+                # Weekly progress reminder (dropdown)
+                BoxLayout:
+                    spacing: dp(12)
+                    size_hint_y: None
+                    height: dp(48)
+                    MDLabel:
+                        text: "Enable weekly progress reminder"
+                        size_hint_x: None
+                        width: dp(300)
+                        halign: "left"
+                        valign: "middle"
+                        color: app.primary_color
+                        text_size: self.size
+                    MDTextField:
+                        id: reminder_field
+                        text: "Yes" if (hasattr(app, "remind_weekly") and app.remind_weekly) else "No"
+                        readonly: True
+                        size_hint_x: None
+                        width: dp(120)
+                        foreground_color: app.primary_color
+                        text_color: app.primary_color
+                        hint_text_color: app.primary_color
+                        cursor_color: app.primary_color
+                        background_color: 0, 0, 0, 0
+                        canvas.before:
+                            Color:
+                                rgba: app.primary_color
+                            Line:
+                                width: dp(1.2)
+                                rectangle: (self.x, self.y, self.width, self.height)
+                    MDIconButton:
+                        icon: "menu-down"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_color
+                        on_release: root.open_reminder_menu(reminder_field)
+    # --- Footer: Return to Menu ---
+    AnchorLayout:
+        anchor_x: "right"
+        anchor_y: "bottom"
+        size_hint: None, None
+        size: dp(160), dp(48)
+        pos_hint: {"right": 1, "y": 0}
+
+        MDLabel:
+            text: "[u]Return to Menu[/u]"
+            markup: True
+            theme_text_color: "Custom"
+            text_color: 0.05, 0.2, 0.4, 1
+            halign: "right"
+            valign: "middle"
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+<MealsScreen@Screen>:
+    name: "meals"
+    section_color: 1, 0.55, 0, 1   # orange
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    MDScrollView:
+        size_hint: 1, 1
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            padding: dp(20), dp(20), dp(20), dp(100)
+            spacing: dp(24)
+
+            # --- Breakfast (Protein, Carbs, Veggies) ---
+            MDLabel:
+                text: "Breakfast"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: breakfast_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Carbs
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Carbs"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: breakfast_carbs
+                        hint_text: "Enter carbs"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: breakfast_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Snack 1 (single field) ---
+            MDLabel:
+                text: "Snack 1"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                padding: dp(50), 0, dp(50), 0
+                size_hint_y: None
+                height: dp(56)
+                MDTextField:
+                    id: snack1
+                    hint_text: "Enter snack"
+                    mode: "outlined"
+                    theme_text_color: "Custom"
+                    text_color_normal: root.section_color
+                    text_color_focus: root.section_color
+                    hint_text_color: root.section_color
+                    cursor_color: root.section_color
+                    line_color_normal: 0, 0, 0, 0
+                    line_color_focus: 0, 0, 0, 0
+                    canvas.after:
+                        Color:
+                            rgba: 1, 0.55, 0, 1
+                        Line:
+                            width: dp(1)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Lunch (Protein, Carbs, Veggies) ---
+            MDLabel:
+                text: "Lunch"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: lunch_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Carbs
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Carbs"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: lunch_carbs
+                        hint_text: "Enter carbs"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: lunch_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Snack 2 (single field) ---
+            MDLabel:
+                text: "Snack 2"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                padding: dp(50), 0, dp(50), 0
+                size_hint_y: None
+                height: dp(56)
+                MDTextField:
+                    id: snack2
+                    hint_text: "Enter snack"
+                    mode: "outlined"
+                    theme_text_color: "Custom"
+                    text_color_normal: root.section_color
+                    text_color_focus: root.section_color
+                    hint_text_color: root.section_color
+                    cursor_color: root.section_color
+                    line_color_normal: 0, 0, 0, 0
+                    line_color_focus: 0, 0, 0, 0
+                    canvas.after:
+                        Color:
+                            rgba: 1, 0.55, 0, 1
+                        Line:
+                            width: dp(1)
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Dinner (Protein, Fats, Veggies) ---
+            MDLabel:
+                text: "Dinner"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: dinner_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Fats
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Fats"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: dinner_fats
+                        hint_text: "Enter fats"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: dinner_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Go To Breakfast (Protein, Carbs, Veggies) ---
+            MDLabel:
+                text: "Go To Breakfast"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_breakfast_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Carbs
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Carbs"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_breakfast_carbs
+                        hint_text: "Enter carbs"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_breakfast_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Go To Lunch (Protein, Carbs, Veggies) ---
+            MDLabel:
+                text: "Go To Lunch"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_lunch_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Carbs
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Carbs"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_lunch_carbs
+                        hint_text: "Enter carbs"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_lunch_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+            # --- Go To Dinner (Protein, Fats, Veggies) ---
+            MDLabel:
+                text: "Go To Dinner"
+                theme_text_color: "Custom"
+                text_color: root.section_color
+                halign: "center"
+                size_hint_y: None
+                height: self.texture_size[1]
+
+            BoxLayout:
+                orientation: "horizontal"
+                spacing: dp(16)
+                size_hint_y: None
+                height: dp(96)
+
+                # Protein
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Protein"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_dinner_protein
+                        hint_text: "Enter protein"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Fats
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Fats"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_dinner_fats
+                        hint_text: "Enter fats"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+                # Veggies
+                BoxLayout:
+                    orientation: "vertical"
+                    spacing: dp(8)
+                    size_hint_x: 1
+                    MDLabel:
+                        text: "Veggies"
+                        theme_text_color: "Custom"
+                        text_color: root.section_color
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    MDTextField:
+                        id: goto_dinner_veggies
+                        hint_text: "Enter veggies"
+                        mode: "outlined"
+                        theme_text_color: "Custom"
+                        text_color_normal: root.section_color
+                        text_color_focus: root.section_color
+                        hint_text_color: root.section_color
+                        cursor_color: root.section_color
+                        line_color_normal: 0, 0, 0, 0
+                        line_color_focus: 0, 0, 0, 0
+                        canvas.after:
+                            Color:
+                                rgba: 1, 0.55, 0, 1
+                            Line:
+                                width: dp(1)
+                                rectangle: (self.x, self.y, self.width, self.height)
+
+    # --- Footer: Return to Menu ---
+    AnchorLayout:
+        anchor_x: "right"
+        anchor_y: "bottom"
+        size_hint: None, None
+        size: dp(160), dp(48)
+        pos_hint: {"right": 1, "y": 0}
+
+        MDLabel:
+            text: "[u]Return to Menu[/u]"
+            markup: True
+            theme_text_color: "Custom"
+            text_color: 1, 0.55, 0, 1
+            halign: "right"
+            valign: "middle"
+            on_touch_down:
+                if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+<SupplementsScreen>:
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+
+        MDBoxLayout:
+            id: content_box
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(24)
+            size_hint_y: None
+            adaptive_height: True
+            md_bg_color: 0, 0, 0, 1
+
+            # -------------------
+            # Muscle Growth
+            # -------------------
+            MDLabel:
+                text: "[u]Muscle Growth[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.13, 0.55, 0.13, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            # Row 1
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: mg_sup_field_1
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Muscle Growth[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_mg_menu(root.ids.mg_sup_field_1)
+                MDTextField:
+                    id: mg_unit_field_1
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_mg_unit_menu(mg_unit_field_1)
+
+            # Row 2
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: mg_sup_field_2
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Muscle Growth[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Muscle Growth", root.ids["mg_sup_field_2"])
+
+                MDTextField:
+                    id: mg_unit_field_2
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Muscle Growth", root.ids["mg_unit_field_2"])
+
+            # Row 3
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: mg_sup_field_3
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Muscle Growth[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Muscle Growth", root.ids["mg_sup_field_3"])
+                MDTextField:
+                    id: mg_unit_field_3
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Muscle Growth", root.ids["mg_unit_field_3"])
+
+            # Row 4
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: mg_sup_field_4
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Muscle Growth[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Muscle Growth", root.ids["mg_sup_field_4"])
+                MDTextField:
+                    id: mg_unit_field_4
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Muscle Growth", root.ids["mg_unit_field_4"])
+
+            # -------------------
+            # Endurance
+            # -------------------
+            MDLabel:
+                text: "[u]Endurance[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.13, 0.55, 0.13, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            # Row 1
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: en_sup_field_1
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Endurance[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Endurance", root.ids["en_sup_field_1"])
+
+                MDTextField:
+                    id: en_unit_field_1
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Endurance", root.ids["en_unit_field_1"])
+
+            # Row 2
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: en_sup_field_2
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Endurance[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Endurance", root.ids["en_sup_field_2"])
+
+                MDTextField:
+                    id: en_unit_field_2
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Endurance", root.ids["en_unit_field_2"])
+
+            # Row 3
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: en_sup_field_3
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Endurance[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Endurance", root.ids["en_sup_field_3"])
+
+                MDTextField:
+                    id: en_unit_field_3
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Endurance", root.ids["en_unit_field_3"])
+
+            # Row 4
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: en_sup_field_4
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Endurance[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Endurance", root.ids["en_sup_field_4"])
+
+                MDTextField:
+                    id: en_unit_field_4
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Endurance", root.ids["en_unit_field_4"])
+
+            # -------------------
+            # Recovery & Repair
+            # -------------------
+            MDLabel:
+                text: "[u]Recovery & Repair[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.13, 0.55, 0.13, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            # Row 1
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: rec_sup_field_1
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Recovery & Repair[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Recovery & Repair", root.ids["rec_sup_field_1"])
+                MDTextField:
+                    id: rec_unit_field_1
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Recovery & Repair", root.ids["rec_unit_field_1"])
+
+            # Row 2
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: rec_sup_field_2
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Recovery & Repair[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Recovery & Repair", root.ids["rec_sup_field_2"])
+                MDTextField:
+                    id: rec_unit_field_2
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Recovery & Repair", root.ids["rec_unit_field_2"])
+
+            # Row 3
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: rec_sup_field_3
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Recovery & Repair[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Recovery & Repair", root.ids["rec_sup_field_3"])
+                MDTextField:
+                    id: rec_unit_field_3
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Recovery & Repair", root.ids["rec_unit_field_3"])
+
+            # Row 4
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: rec_sup_field_4
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Recovery & Repair[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Recovery & Repair", root.ids["rec_sup_field_4"])
+                MDTextField:
+                    id: rec_unit_field_4
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Recovery & Repair", root.ids["rec_unit_field_4"])
+
+            # -------------------
+            # Strength
+            # -------------------
+            MDLabel:
+                text: "[u]Strength[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.13, 0.55, 0.13, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+ 
+            # Row 1
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: str_sup_field_1
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Strength[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Strength", root.ids["str_sup_field_1"])
+                MDTextField:
+                    id: str_unit_field_1
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Strength", root.ids["str_unit_field_1"])
+
+            # Row 2
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: str_sup_field_2
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Strength[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Strength", root.ids["str_sup_field_2"])
+                MDTextField:
+                    id: str_unit_field_2
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Strength", root.ids["str_unit_field_2"])
+
+            # Row 3
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: str_sup_field_3
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Strength[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Strength", root.ids["str_sup_field_3"])
+                MDTextField:
+                    id: str_unit_field_3
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Strength", root.ids["str_unit_field_3"])
+
+            # Row 4
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: str_sup_field_4
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Strength[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Strength", root.ids["str_sup_field_4"])
+                MDTextField:
+                    id: str_unit_field_4
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Strength", root.ids["str_unit_field_4"])
+
+            # -------------------
+            # Weight Management
+            # -------------------
+            MDLabel:
+                text: "[u]Weight Management[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.13, 0.55, 0.13, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+ 
+            # Row 1
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: wm_sup_field_1
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Weight Management[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Weight Management", root.ids["wm_sup_field_1"])
+                MDTextField:
+                    id: wm_unit_field_1
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Weight Management", root.ids["wm_unit_field_1"])
+
+            # Row 2
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: wm_sup_field_2
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Weight Management[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Weight Management", root.ids["wm_sup_field_2"])
+                MDTextField:
+                    id: wm_unit_field_2
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Weight Management", root.ids["wm_unit_field_2"])
+ 
+            # Row 3
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: wm_sup_field_3
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Weight Management[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Weight Management", root.ids["wm_sup_field_3"])
+                MDTextField:
+                    id: wm_unit_field_3
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Weight Management", root.ids["wm_unit_field_3"])
+
+            # Row 4
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+                MDTextField:
+                    id: wm_sup_field_4
+                    hint_text: "Supplement"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Weight Management[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(200)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Weight Management", root.ids["wm_sup_field_4"])
+                MDTextField:
+                    id: wm_unit_field_4
+                    hint_text: "Unit"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.13, 0.55, 0.13, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+                MDLabel:
+                    text: "[u]Unit[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Weight Management", root.ids["wm_unit_field_4"])
+
+            BoxLayout:
+                size_hint_y: None
+                height: dp(56)
+                padding: dp(16), dp(10)
+                spacing: dp(12)
+
+                Widget:
+
+                MDLabel:
+                    text: "[u]Return to Menu[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.13, 0.55, 0.13, 1   # forest green
+                    halign: "right"
+                    valign: "middle"
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
+
+<WorkoutsScreen>:
+    ScrollView:
+        do_scroll_x: False
+        do_scroll_y: True
+
+        MDBoxLayout:
+            id: workout_content_box
+            orientation: "vertical"
+            padding: dp(20)
+            spacing: dp(24)
+            size_hint_y: None
+            adaptive_height: True
+            md_bg_color: 0, 0, 0, 1
+
+            # -------------------
+            # Strength
+            # -------------------
+            MDLabel:
+                text: "[u]Strength[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: str_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Strength", str_ex_field)
+
+                MDTextField:
+                    id: str_unit_field
+                    hint_text: "Sets"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Sets[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Strength", str_unit_field)
+            # -------------------
+            # Cardio
+            # -------------------
+            MDLabel:
+                text: "[u]Cardio[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: cardio_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Cardio", cardio_ex_field)
+
+                MDTextField:
+                    id: cardio_unit_field
+                    hint_text: "Duration"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Minutes[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Cardio", cardio_unit_field)
+
+            # -------------------
+            # Adaptive
+            # -------------------
+            MDLabel:
+                text: "[u]Adaptive[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: adaptive_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Adaptive", adaptive_ex_field)
+
+                MDTextField:
+                    id: adaptive_unit_field
+                    hint_text: "Sets"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Sets[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Adaptive", adaptive_unit_field)
+
+            # -------------------
+            # ISO
+            # -------------------
+            MDLabel:
+                text: "[u]ISO[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: iso_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("ISO", iso_ex_field)
+
+                MDTextField:
+                    id: iso_unit_field
+                    hint_text: "Duration"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Seconds[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("ISO", iso_unit_field)
+            # -------------------
+            # Plyo
+            # -------------------
+            MDLabel:
+                text: "[u]Plyo[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: plyo_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Plyo", plyo_ex_field)
+
+                MDTextField:
+                    id: plyo_unit_field
+                    hint_text: "Reps"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Reps[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Plyo", plyo_unit_field)
+            # -------------------
+            # Recovery & Repair
+            # -------------------
+            MDLabel:
+                text: "[u]Recovery & Repair[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 0.75, 0.75, 0.75, 1
+                halign: "left"
+                size_hint_y: None
+                height: dp(24)
+
+            BoxLayout:
+                spacing: dp(10)
+                size_hint_y: None
+                height: dp(48)
+
+                MDTextField:
+                    id: recovery_ex_field
+                    hint_text: "Exercise"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Exercise[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(160)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_menu("Recovery", recovery_ex_field)
+
+                MDTextField:
+                    id: recovery_unit_field
+                    hint_text: "Minutes"
+                    readonly: True
+                    text_color: 1, 1, 1, 1
+                    hint_text_color: 1, 1, 1, 0.7
+                    cursor_color: 1, 1, 1, 1
+                    foreground_color: 1, 1, 1, 1
+                    canvas.before:
+                        Color:
+                            rgba: 0.75, 0.75, 0.75, 1
+                        Line:
+                            width: 1.8
+                            rectangle: (self.x, self.y, self.width, self.height)
+
+                MDLabel:
+                    text: "[u]Minutes[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    size_hint_x: None
+                    width: dp(60)
+                    on_touch_down:
+                        if self.collide_point(*args[1].pos): root.open_unit_menu("Recovery", recovery_unit_field)
+
+
+            AnchorLayout:
+                anchor_x: "right"
+                anchor_y: "bottom"
+                padding: dp(16), dp(10)
+
+                MDLabel:
+                    text: "[u]Return to Menu[/u]"
+                    markup: True
+                    theme_text_color: "Custom"
+                    text_color: 0.75, 0.75, 0.75, 1
+                    halign: "center"
+                    valign: "middle"
+                    on_touch_down:
+                        root._on_return_to_menu(self, args[1])
+
+<FreeTrainingScreen>:
+    name: "freetraining"
+
+    canvas.before:
+        Color:
+            rgba: 0, 0, 0, 1
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+    BoxLayout:
+        orientation: "vertical"
+        padding: dp(20)
+        spacing: dp(20)
+
+        # Input fields
+        MDBoxLayout:
+            orientation: "vertical"
+            spacing: dp(20)
+            size_hint_y: None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5}
+
+            MDTextField:
+                id: workout_name
+                hint_text: "Workout Name"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+            MDTextField:
+                id: skill_focus
+                hint_text: "Skill Focus"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+            MDTextField:
+                id: notes
+                hint_text: "Notes"
+                text_color: 1, 0.84, 0, 1
+                foreground_color: 1, 0.84, 0, 1
+                cursor_color: 1, 0.84, 0, 1
+                hint_text_color: 1, 0.84, 0, 0.7
+                background_color: 0, 0, 0, 1
+                canvas.before:
+                    Color:
+                        rgba: 1, 0.84, 0, 1
+                    Line:
+                        width: 1.8
+                        rectangle: (self.x, self.y, self.width, self.height)
+
+        # Timer
+        MDLabel:
+            id: timer_label
+            text: "00:00:00"
+            font_style: "Headline"
+            halign: "center"
+            theme_text_color: "Custom"
+            text_color: 1, 0.84, 0, 1
+
+        # Start/Stop buttons
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(20)
+            pos_hint: {"center_x": 0.5}
+
+            MenuLabel:
+                id: start_timer
+                text: "[u]Start Timer[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.start_timer()
+
+            MenuLabel:
+                id: stop_timer
+                text: "[u]Stop Timer[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.stop_timer()
+
+        # Save Session bottom-left
+        AnchorLayout:
+            anchor_x: "left"
+            anchor_y: "bottom"
+            size_hint: None, None
+            size: dp(160), dp(48)
+
+            MenuLabel:
+                id: save_session
+                text: "[u]Save Session[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                on_release: root.save_session()
+
+        # --- Footer: Return to Menu ---
+        AnchorLayout:
+            anchor_x: "right"
+            anchor_y: "bottom"
+            size_hint: None, None
+            size: dp(160), dp(48)
+            pos_hint: {"right": 1, "y": 0}
+
+            MDLabel:
+                text: "[u]Return to Menu[/u]"
+                markup: True
+                theme_text_color: "Custom"
+                text_color: 1, 0.84, 0, 1
+                halign: "right"
+                valign: "middle"
+                on_touch_down:
+                    if self.collide_point(*args[1].pos): app.return_to_menu_dropdown() if hasattr(app, "return_to_menu_dropdown") else None
